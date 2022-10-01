@@ -1,0 +1,42 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+}
+
+#sections {
+  width: 100vw;
+  padding: 2vw;
+  display: flex;
+  border: 1px solid lightblue;
+  vertical-align: top;
+}
+
+#charts {
+  flex-basis: 100%;
+  border: 1px solid lightblue;
+  vertical-align: top;
+}
+
+#watchlists {
+  flex-basis: 100%;
+  border: 1px solid lightblue;
+  vertical-align: top;
+}
+
+#watchlist {
+  flex-basis: 100%;
+  width: 80%;
+  border: 1px solid silver;
+}
+
+#watchlist-table {
+    width: 100%;
+    text-align: left;
+    border: 1px solid rgb(186, 75, 75);
+}
+
+#watchlist-table th, td{
+    border: 1px solid rgb(228, 228, 228);
+    padding: 5px;
+}
