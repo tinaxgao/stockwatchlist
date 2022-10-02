@@ -36,41 +36,77 @@ function addStock(ticker) {
   const tableColumnTicker = document.createElement("td");
   tableColumnTicker.textContent = ticker.toUpperCase();
   const tableColumnPrice = document.createElement("td");
-  const tableColumnTrend = document.createElement("td");
+  const tableColumn5day = document.createElement("td");
+  const tableColumn3day = document.createElement("td");
+  const tableColumn1day = document.createElement("td");
   const tableColumnActions = document.createElement("td");
   const deleteButton = document.createElement("button");
   deleteButton.className = "delete";
   deleteButton.textContent = "x";
   const promisedData = Promise.resolve(fetchStockData(ticker));
   promisedData
+    .catch((error) => {
+      alert("Invalid ticker symbol");
+    })
     .then((data) => {
       const lastPrice = data[data.length - 1]["c"];
-      const changePercent = getChangePercent(data);
+
+      // copy and split the data array, only keep the last 5 values
+      const fiveDayData = data.reverse().slice(0, 6);
+      const threeDayData = data.reverse().slice(0, 4);
+      const oneDayData = data.reverse().slice(0, 2);
+      console.log(
+        data,
+        "fiveDayData",
+        fiveDayData,
+        "threeDayData",
+        threeDayData,
+        "oneDayData",
+        oneDayData
+      );
+      const changePercent5 = getChangePercent(fiveDayData);
+      const changePercent3 = getChangePercent(threeDayData);
+      const changePercent1 = getChangePercent(oneDayData);
       tableColumnPrice.textContent = lastPrice;
-      tableColumnTrend.textContent = changePercent.toFixed(2) + "%";
-      if (changePercent > 0) {
-        tableColumnTrend.style.color = "green";
+      tableColumn5day.textContent = changePercent5;
+      if (changePercent5 > 0) {
+        tableColumn5day.style.color = "green";
       } else {
-        tableColumnTrend.style.color = "red";
+        tableColumn5day.style.color = "red";
+      }
+      tableColumn3day.textContent = changePercent3;
+      if (changePercent3 > 0) {
+        tableColumn3day.style.color = "green";
+      } else {
+        tableColumn3day.style.color = "red";
+      }
+      tableColumn1day.textContent = changePercent1;
+      if (changePercent1 > 0) {
+        tableColumn1day.style.color = "green";
+      } else {
+        tableColumn1day.style.color = "red";
       }
     })
     .then(() => {
       tableColumnActions.appendChild(deleteButton);
       tableBodyRow.appendChild(tableColumnTicker);
       tableBodyRow.appendChild(tableColumnPrice);
-      tableBodyRow.appendChild(tableColumnTrend);
+      tableBodyRow.appendChild(tableColumn5day);
+      tableBodyRow.appendChild(tableColumn3day);
+      tableBodyRow.appendChild(tableColumn1day);
       tableBodyRow.appendChild(tableColumnActions);
       tableBody.appendChild(tableBodyRow);
       formTicker.value = "";
       formButton.disabled = true;
     })
     .catch((error) => {
-      alert("Invalid ticker");
+      console.log(error);
     });
 }
 
 async function fetchStockData(ticker) {
-  const start = getDaysAgo(4);
+  let startDaysAgo = 10;
+  const start = getDaysAgo(startDaysAgo);
   const end = getDaysAgo(1);
   const url = `https://data.alpaca.markets/v2/stocks/${ticker}/bars?start=${start}&end=${end}&timeframe=1Day`;
 
@@ -95,9 +131,9 @@ function getDaysAgo(days) {
 function getChangePercent(data) {
   const firstPrice = data[0]["c"];
   const lastPrice = data[data.length - 1]["c"];
-  const change = lastPrice - firstPrice;
-  const changePercent = (change / firstPrice) * 100;
-  return changePercent;
+  const change = firstPrice - lastPrice;
+  const changePercent = (change / lastPrice) * 100;
+  return changePercent.toFixed(2) + "%";
 }
 
 // DELETE STOCK FROM TABLE
