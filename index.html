@@ -8,8 +8,10 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Stock Watchlist</h1>
-    <p>Add the stocks you want to track.</p>
+    <header>
+      <h1>Stock Watchlist</h1>
+      <p>Add the stocks you want to track.</p>
+    </header>
     <div id="sections">
       <section id="charts">
         <h2>Charts</h2>
@@ -17,9 +19,21 @@
       </section>
       <section id="watchlists">
         <h2>Watchlist</h2>
-        <div id="watchlist"></div>
+        <div id="watchlist">
+            <table id="watchlist-table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Last Closing Price</th>
+                        <th>3 day Change %</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+        </div>
       </section>
     </div>
-    <script src="index.js"></script>
+    <script src="index.js" type="module"></script>
   </body>
 </html>

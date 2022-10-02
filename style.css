@@ -1,42 +1,84 @@
-body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.42857143;
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1{
+    margin-bottom: 10px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+header {
+  width: 100%;
+  padding: 20px 10px 20px 10px;
+  z-index: 1000;
 }
 
 #sections {
-  width: 100vw;
-  padding: 2vw;
+  width: 97vw;
+  padding: 10px;
   display: flex;
-  border: 1px solid lightblue;
   vertical-align: top;
 }
 
 #charts {
   flex-basis: 100%;
-  border: 1px solid lightblue;
   vertical-align: top;
 }
 
 #watchlists {
   flex-basis: 100%;
-  border: 1px solid lightblue;
   vertical-align: top;
 }
 
 #watchlist {
   flex-basis: 100%;
   width: 80%;
-  border: 1px solid silver;
 }
 
 #watchlist-table {
-    width: 100%;
-    text-align: left;
-    border: 1px solid rgb(186, 75, 75);
+  width: 100%;
+  text-align: left;
+  margin-bottom: 20px;
 }
 
-#watchlist-table th, td{
-    border: 1px solid rgb(228, 228, 228);
-    padding: 5px;
+#watchlist-table th,
+td {
+  border: 1px solid rgb(228, 228, 228);
+  padding: 5px;
 }

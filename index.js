@@ -1,30 +1,11 @@
-const table = document.createElement("table");
-table.id = "watchlist-table";
-const tableHead = document.createElement("thead");
-const tableHeadRow = document.createElement("tr");
-const tableHeadTicker = document.createElement("th");
-tableHeadTicker.textContent = "Ticker";
-const tableHeadPrice = document.createElement("th");
-tableHeadPrice.textContent = "Price";
-const tableHeadTrend = document.createElement("th");
-tableHeadTrend.textContent = "Trend";
-const tableHeadActions = document.createElement("th");
-tableHeadActions.textContent = "Actions";
-tableHeadRow.appendChild(tableHeadTicker);
-tableHeadRow.appendChild(tableHeadPrice);
-tableHeadRow.appendChild(tableHeadTrend);
-tableHeadRow.appendChild(tableHeadActions);
-tableHead.appendChild(tableHeadRow);
-table.appendChild(tableHead);
-const tableBody = document.createElement("tbody");
-table.appendChild(tableBody);
+import { APCAAPIKEYID, APCAAPISECRETKEY } from "./config.js";
+
 const watchlist = document.getElementById("watchlist");
-watchlist.appendChild(table);
 
 // FORM
 const form = document.createElement("form");
 const formTicker = document.createElement("input");
-formTicker.id = "ticker";
+formTicker.id = "tickerInput";
 formTicker.placeholder = "Ticker";
 const formButton = document.createElement("button");
 formButton.textContent = "Add Stock";
@@ -44,30 +25,84 @@ form.addEventListener("input", (e) => {
 // ADD STOCK TO TABLE
 formButton.addEventListener("click", (e) => {
   e.preventDefault();
+  const input = formTicker.value;
+  addStock(input);
+});
+
+function addStock(ticker) {
   const tableBody = document.querySelector("tbody");
   const tableBodyRow = document.createElement("tr");
-  tableBodyRow.id = formTicker.value;
+  tableBodyRow.className = ticker;
   const tableColumnTicker = document.createElement("td");
-  tableColumnTicker.textContent = formTicker.value;
+  tableColumnTicker.textContent = ticker.toUpperCase();
   const tableColumnPrice = document.createElement("td");
   const tableColumnTrend = document.createElement("td");
   const tableColumnActions = document.createElement("td");
   const deleteButton = document.createElement("button");
-  deleteButton.id = "delete";
+  deleteButton.className = "delete";
   deleteButton.textContent = "x";
-  tableColumnActions.appendChild(deleteButton);
-  tableBodyRow.appendChild(tableColumnTicker);
-  tableBodyRow.appendChild(tableColumnPrice);
-  tableBodyRow.appendChild(tableColumnTrend);
-  tableBodyRow.appendChild(tableColumnActions);
-  tableBody.appendChild(tableBodyRow);
-  formTicker.value = "";
-  formButton.disabled = true;
-});
+  const promisedData = Promise.resolve(fetchStockData(ticker));
+  promisedData
+    .then((data) => {
+      const lastPrice = data[data.length - 1]["c"];
+      const changePercent = getChangePercent(data);
+      tableColumnPrice.textContent = lastPrice;
+      tableColumnTrend.textContent = changePercent.toFixed(2) + "%";
+      if (changePercent > 0) {
+        tableColumnTrend.style.color = "green";
+      } else {
+        tableColumnTrend.style.color = "red";
+      }
+    })
+    .then(() => {
+      tableColumnActions.appendChild(deleteButton);
+      tableBodyRow.appendChild(tableColumnTicker);
+      tableBodyRow.appendChild(tableColumnPrice);
+      tableBodyRow.appendChild(tableColumnTrend);
+      tableBodyRow.appendChild(tableColumnActions);
+      tableBody.appendChild(tableBodyRow);
+      formTicker.value = "";
+      formButton.disabled = true;
+    })
+    .catch((error) => {
+      alert("Invalid ticker");
+    });
+}
+
+async function fetchStockData(ticker) {
+  const start = getDaysAgo(4);
+  const end = getDaysAgo(1);
+  const url = `https://data.alpaca.markets/v2/stocks/${ticker}/bars?start=${start}&end=${end}&timeframe=1Day`;
+
+  let response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "APCA-API-KEY-ID": APCAAPIKEYID,
+      "APCA-API-SECRET-KEY": APCAAPISECRETKEY,
+    },
+  });
+  let data = await response.json();
+  return data.bars;
+}
+
+function getDaysAgo(days) {
+  const today = new Date();
+  const daysAgo = new Date(today);
+  daysAgo.setDate(daysAgo.getDate() - days);
+  return daysAgo.toISOString();
+}
+
+function getChangePercent(data) {
+  const firstPrice = data[0]["c"];
+  const lastPrice = data[data.length - 1]["c"];
+  const change = lastPrice - firstPrice;
+  const changePercent = (change / firstPrice) * 100;
+  return changePercent;
+}
 
 // DELETE STOCK FROM TABLE
 watchlist.addEventListener("click", (e) => {
-  if (e.target.id === "delete") {
+  if (e.target.className === "delete") {
     e.target.parentNode.parentNode.remove();
   }
 });
