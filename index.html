@@ -30,9 +30,15 @@
             <tbody></tbody>
           </table>
           <form>
-            <input type="text" id="tickerInput" placeholder="Symbol" />
+            <input
+              type="text"
+              id="tickerInput"
+              placeholder="Symbol"
+              autofocus
+            />
             <button type="submit" id="addStock">Add Stock</button>
           </form>
+          <label id="error" style="display: none;">Invalid stock symbol</label>
         </div>
       </section>
     </div>

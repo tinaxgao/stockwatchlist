@@ -101,3 +101,9 @@ button:disabled {
   border: 1px solid grey;
   color: lightgray;
 }
+
+label {
+  font-size: 10px;
+  color: orange;
+  padding-left: 7px;
+}

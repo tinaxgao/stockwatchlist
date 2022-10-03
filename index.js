@@ -21,6 +21,13 @@ formButton.addEventListener("click", (e) => {
   addStock(input);
 });
 
+// DELETE STOCK FROM TABLE
+watchlist.addEventListener("click", (e) => {
+  if (e.target.className === "delete") {
+    e.target.parentNode.parentNode.remove();
+  }
+});
+
 function addStock(ticker) {
   const tableBody = document.querySelector("tbody");
   const tableBodyRow = document.createElement("tr");
@@ -37,12 +44,10 @@ function addStock(ticker) {
   deleteButton.textContent = "x";
   const promisedData = Promise.resolve(fetchStockData(ticker));
   promisedData
-    .catch((error) => {
-      alert("Error");
-    })
     .then((data) => {
       if (data === undefined || data === null) {
-        alert("Error: Invalid ticker symbol");
+        const error = document.getElementById("error");
+        error.style.display = "block";
       }
       const selectedData = data.reverse().slice(0, 6);
       const lastPrice = selectedData[0]["c"];
@@ -120,10 +125,3 @@ function getChangePercent(data, days) {
   const changePercent = (change / earlierPrice) * 100;
   return parseFloat(changePercent.toFixed(2));
 }
-
-// DELETE STOCK FROM TABLE
-watchlist.addEventListener("click", (e) => {
-  if (e.target.className === "delete") {
-    e.target.parentNode.parentNode.remove();
-  }
-});
