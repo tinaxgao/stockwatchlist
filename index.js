@@ -3,6 +3,7 @@ import { APCAAPIKEYID, APCAAPISECRETKEY } from "./config.js";
 const watchlist = document.getElementById("watchlist");
 const formTicker = document.getElementById("tickerInput");
 const formButton = document.getElementById("addStock");
+const error = document.getElementById("error");
 addStock("f");
 
 // DISABLE INPUT SUBMIT BUTTON IF EMPTY
@@ -46,8 +47,9 @@ function addStock(ticker) {
   promisedData
     .then((data) => {
       if (data === undefined || data === null) {
-        const error = document.getElementById("error");
         error.style.display = "block";
+      } else {
+        error.style.display = "none";
       }
       const selectedData = data.reverse().slice(0, 6);
       const lastPrice = selectedData[0]["c"];
