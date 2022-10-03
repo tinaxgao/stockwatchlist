@@ -3,6 +3,7 @@ import { APCAAPIKEYID, APCAAPISECRETKEY } from "./config.js";
 const watchlist = document.getElementById("watchlist");
 const formTicker = document.getElementById("tickerInput");
 const formButton = document.getElementById("addStock");
+addStock("f");
 
 // DISABLE INPUT SUBMIT BUTTON IF EMPTY
 formTicker.addEventListener("input", (e) => {
@@ -37,9 +38,12 @@ function addStock(ticker) {
   const promisedData = Promise.resolve(fetchStockData(ticker));
   promisedData
     .catch((error) => {
-      alert("Invalid ticker symbol");
+      alert("Error");
     })
     .then((data) => {
+      if (data === undefined || data === null) {
+        alert("Error: Invalid ticker symbol");
+      }
       const selectedData = data.reverse().slice(0, 6);
       const lastPrice = selectedData[0]["c"];
       let priceTrends = {
