@@ -25,12 +25,12 @@ ul {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-h1{
-    margin-bottom: 10px;
+h1 {
+  margin-bottom: 10px;
 }
 
 h2 {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 ol,
@@ -45,7 +45,7 @@ img {
 
 header {
   width: 100%;
-  padding: 20px 10px 20px 10px;
+  padding: 20px 10px 20px 20px;
   z-index: 1000;
 }
 
@@ -53,11 +53,6 @@ header {
   width: 97vw;
   padding: 10px;
   display: flex;
-  vertical-align: top;
-}
-
-#charts {
-  flex-basis: 100%;
   vertical-align: top;
 }
 
@@ -76,7 +71,33 @@ header {
   margin-bottom: 20px;
 }
 
+#watchlist-table th {
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
 #watchlist-table th,
 td {
   padding: 5px;
+}
+
+input {
+  font-size: 10px;
+  padding: 5px;
+  margin: 5px;
+}
+
+button {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 7px;
+  background-color: #fff;
+  border: 1px solid darkgrey;
+  color: darkslateblue;
+}
+
+button:disabled {
+  background-color: #fff;
+  border: 1px solid grey;
+  color: lightgray;
 }

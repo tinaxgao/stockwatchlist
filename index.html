@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Stock Watchlist</title>
     <link rel="stylesheet" href="style.css" />
+    <script defer type="module" src="index.js"></script>
   </head>
   <body>
     <header>
@@ -15,22 +16,25 @@
     <div id="sections">
       <section id="watchlists">
         <div id="watchlist">
-            <table id="watchlist-table">
-                <thead>
-                    <tr>
-                        <th>Symbol</th>
-                        <th>Last Closing Price</th>
-                        <th>5 day Change %</th>
-                        <th>3 day Change %</th>
-                        <th>1 day Change %</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
+          <table id="watchlist-table">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Last Closing Price</th>
+                <th>5 day Change %</th>
+                <th>3 day Change %</th>
+                <th>1 day Change %</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <form>
+            <input type="text" id="tickerInput" placeholder="Symbol" />
+            <button type="submit" id="addStock">Add Stock</button>
+          </form>
         </div>
       </section>
     </div>
-    <script type="module" src="index.js"></script>
   </body>
 </html>

@@ -1,20 +1,11 @@
 import { APCAAPIKEYID, APCAAPISECRETKEY } from "./config.js";
 
 const watchlist = document.getElementById("watchlist");
-
-// FORM
-const form = document.createElement("form");
-const formTicker = document.createElement("input");
-formTicker.id = "tickerInput";
-formTicker.placeholder = "Ticker";
-const formButton = document.createElement("button");
-formButton.textContent = "Add Stock";
-form.appendChild(formTicker);
-form.appendChild(formButton);
-watchlist.appendChild(form);
+const formTicker = document.getElementById("tickerInput");
+const formButton = document.getElementById("addStock");
 
 // DISABLE INPUT SUBMIT BUTTON IF EMPTY
-form.addEventListener("input", (e) => {
+formTicker.addEventListener("input", (e) => {
   if (formTicker.value === "") {
     formButton.disabled = true;
   } else {
@@ -49,39 +40,28 @@ function addStock(ticker) {
       alert("Invalid ticker symbol");
     })
     .then((data) => {
-      const lastPrice = data[data.length - 1]["c"];
-
-      // copy and split the data array, only keep the last 5 values
-      const fiveDayData = data.reverse().slice(0, 6);
-      const threeDayData = data.reverse().slice(0, 4);
-      const oneDayData = data.reverse().slice(0, 2);
-      console.log(
-        data,
-        "fiveDayData",
-        fiveDayData,
-        "threeDayData",
-        threeDayData,
-        "oneDayData",
-        oneDayData
-      );
-      const changePercent5 = getChangePercent(fiveDayData);
-      const changePercent3 = getChangePercent(threeDayData);
-      const changePercent1 = getChangePercent(oneDayData);
+      const selectedData = data.reverse().slice(0, 6);
+      const lastPrice = selectedData[0]["c"];
+      let priceTrends = {
+        fiveDay: getChangePercent(selectedData, 5),
+        threeDay: getChangePercent(selectedData, 3),
+        oneDay: getChangePercent(selectedData, 1),
+      };
       tableColumnPrice.textContent = lastPrice;
-      tableColumn5day.textContent = changePercent5;
-      if (changePercent5 > 0) {
+      tableColumn5day.textContent = priceTrends.fiveDay + "%";
+      tableColumn3day.textContent = priceTrends.threeDay + "%";
+      tableColumn1day.textContent = priceTrends.oneDay + "%";
+      if (priceTrends.fiveDay > 0) {
         tableColumn5day.style.color = "green";
       } else {
         tableColumn5day.style.color = "red";
       }
-      tableColumn3day.textContent = changePercent3;
-      if (changePercent3 > 0) {
+      if (priceTrends.threeDay > 0) {
         tableColumn3day.style.color = "green";
       } else {
         tableColumn3day.style.color = "red";
       }
-      tableColumn1day.textContent = changePercent1;
-      if (changePercent1 > 0) {
+      if (priceTrends.oneDay > 0) {
         tableColumn1day.style.color = "green";
       } else {
         tableColumn1day.style.color = "red";
@@ -128,12 +108,13 @@ function getDaysAgo(days) {
   return daysAgo.toISOString();
 }
 
-function getChangePercent(data) {
-  const firstPrice = data[0]["c"];
-  const lastPrice = data[data.length - 1]["c"];
-  const change = firstPrice - lastPrice;
-  const changePercent = (change / lastPrice) * 100;
-  return changePercent.toFixed(2) + "%";
+function getChangePercent(data, days) {
+  const usedData = data.slice(0, days + 1);
+  const recentPrice = usedData[0]["c"];
+  const earlierPrice = usedData[usedData.length - 1]["c"];
+  const change = recentPrice - earlierPrice;
+  const changePercent = (change / earlierPrice) * 100;
+  return parseFloat(changePercent.toFixed(2));
 }
 
 // DELETE STOCK FROM TABLE
